@@ -120,6 +120,7 @@ class HabitTestCase(APITestCase):
 
     def test_public_habits_list(self):
         """Тест получения списка публичных привычек."""
+        # Создаем публичную привычку от другого пользователя
         Habit.objects.create(
             user=self.other_user,
             place="В парке",
@@ -133,5 +134,11 @@ class HabitTestCase(APITestCase):
         data = response.json()
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data.get("count"), 1)
-        self.assertEqual(data.get("results")[0].get("action"), "Публичная привычка")
+        # Теперь должны быть видны обе публичные привычки:
+        # 1. self.habit (от self.user, is_public=True)
+        # 2. Новая привычка от other_user
+        self.assertEqual(data.get("count"), 2)
+        # Проверяем, что обе привычки присутствуют
+        actions = [item.get("action") for item in data.get("results")]
+        self.assertIn("Выпить стакан воды", actions)
+        self.assertIn("Публичная привычка", actions)

@@ -52,7 +52,7 @@ class PublicHabitsAPIView(APIView):
 
     def get(self, request):
         """Возвращает список публичных привычек с пагинацией."""
-        public_habits = Habit.objects.filter(is_public=True).exclude(user=request.user)
+        public_habits = Habit.objects.filter(is_public=True)
 
         paginator = CustomPagination()
         paginated_habits = paginator.paginate_queryset(public_habits, request)
