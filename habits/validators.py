@@ -7,9 +7,7 @@ def validate_time_to_complete(value):
     Время выполнения должно быть не больше 120 секунд.
     """
     if value is not None and value > 120:
-        raise ValidationError(
-            "Время выполнения должно быть не больше 120 секунд."
-        )
+        raise ValidationError("Время выполнения должно быть не больше 120 секунд.")
 
 
 def validate_periodicity(value):
@@ -18,9 +16,7 @@ def validate_periodicity(value):
     Нельзя выполнять привычку реже, чем 1 раз в 7 дней.
     """
     if value is not None and value > 7:
-        raise ValidationError(
-            "Нельзя выполнять привычку реже, чем 1 раз в 7 дней."
-        )
+        raise ValidationError("Нельзя выполнять привычку реже, чем 1 раз в 7 дней.")
 
 
 def validate_habit_execution_frequency(habit):
@@ -28,12 +24,12 @@ def validate_habit_execution_frequency(habit):
     Валидация частоты выполнения привычки.
     Проверяет, что привычка выполняется хотя бы раз в 7 дней.
     """
-    from datetime import date, timedelta
-    
+    from datetime import date
+
     if habit.pk:  # Проверяем только для существующих привычек
         # Получаем последнее выполнение привычки
-        last_execution = habit.executions.order_by('-execution_date').first()
-        
+        last_execution = habit.executions.order_by("-execution_date").first()
+
         if last_execution:
             days_since_last = (date.today() - last_execution.execution_date).days
             if days_since_last > 7:
@@ -46,7 +42,7 @@ def validate_habit_execution_frequency(habit):
 def validate_habit_relations(habit):
     """
     Валидация связей между полезными и приятными привычками.
-    
+
     Правила:
     - Для полезных привычек должна быть либо связанная привычка, либо награда
     - Связанная привычка должна быть приятной
