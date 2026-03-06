@@ -43,12 +43,20 @@ class User(AbstractUser):
         verbose_name="Аватар",
         help_text="Добавьте свое фото.",
     )
+    tg_chat_id = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="Телеграм chat-id",
+        help_text="Укажите свой телеграм chat-id.",
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
+
     def __str__(self):
-        return f"Почта: {self.USERNAME_FIELD}."
+        return self.email
 
     class Meta:
         verbose_name = "Пользователь"

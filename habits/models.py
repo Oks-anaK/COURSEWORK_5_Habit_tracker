@@ -11,12 +11,6 @@ from habits.validators import (
 
 
 class Habit(models.Model):
-    PLACE_CHOICES = [
-        ("cash", "Наличные"),
-        ("transfer", "Перевод на счет"),
-        ("stripe", "Оплата через Stripe"),
-    ]
-
     user = models.ForeignKey(User,
         on_delete=models.CASCADE,
         blank=True,
@@ -27,9 +21,8 @@ class Habit(models.Model):
     )
     place = models.CharField(
         max_length=200,
-        choices=PLACE_CHOICES,
         verbose_name="Место выполнения",
-        help_text="Выберите место выполнения привычки.",
+        help_text="Укажите место, в котором необходимо выполнять привычку.",
     )
     date = models.DateTimeField(
         verbose_name="Время выполнения",
@@ -85,6 +78,9 @@ class Habit(models.Model):
         validate_habit_relations(self)
         validate_habit_execution_frequency(self)
 
+    def __str__(self):
+        return f"{self.action} ({self.user.email if self.user else 'Без пользователя'})"
+    
     class Meta:
         verbose_name = "Привычка"
         verbose_name_plural = "Привычки"
@@ -116,4 +112,4 @@ class HabitExecution(models.Model):
         ordering = ['-execution_date']
 
     def __str__(self):
-        return f"{self.habit.name} - {self.execution_date}"
+        return f"{self.habit.action} - {self.execution_date}"
