@@ -37,7 +37,7 @@ class Habit(models.Model):
     is_pleasant = models.BooleanField(
         default=False,
         verbose_name="Приятная привычка",
-        help_text="Признак приятной привычки - можно привязать к выполнению полезной привычки",
+        help_text="Признак приятной привычки - можно привязать к выполнению полезной привычки.",
     )
     # СВЯЗАННАЯ ПРИВЫЧКА
     related_habit = models.ForeignKey(
@@ -47,11 +47,16 @@ class Habit(models.Model):
         blank=True,
         related_name="linked_habits",
         verbose_name="Связанная привычка",
-        help_text="Связанная привычка (указывается для полезных привычек, не для приятных)",
+        help_text="Связанная привычка (указывается для полезных привычек, не для приятных).",
         limit_choices_to={"is_pleasant": True},
     )
     # Альтернатива связанной привычке
-    reward = models.CharField(max_length=200, blank=True, verbose_name="Вознаграждение")
+    reward = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name="Вознаграждение",
+        help_text="Добавьте вознаграждение за выполнение привычки (альтернатива связанной привычке).",
+    )
     time_to_complete = models.PositiveIntegerField(
         verbose_name="Время выполнения (в секундах)",
         help_text=(
@@ -62,7 +67,11 @@ class Habit(models.Model):
         blank=True,
         validators=[MinValueValidator(1), validate_time_to_complete],
     )
-    is_public = models.BooleanField(default=False, verbose_name="Публичная привычка")
+    is_public = models.BooleanField(
+        default=False,
+        verbose_name="Публичная привычка",
+        help_text="Признак публичности - можно сделать привычку публичной.",
+    )
     periodicity = models.PositiveIntegerField(
         default=1,
         verbose_name="Периодичность (в днях)",
