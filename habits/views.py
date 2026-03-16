@@ -1,3 +1,4 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -20,6 +21,60 @@ class HabitViewSet(viewsets.ModelViewSet):
 
             return [IsAuthenticated(), IsOwnerOrReadOnly()]
         return [IsAuthenticated()]
+
+    @swagger_auto_schema(
+        operation_summary="Получить список привычек пользователя",
+        operation_description="Возвращает только привычки текущего пользователя с пагинацией",
+        tags=["Привычки"],
+    )
+    def list(self, request, *args, **kwargs):
+        """Получить список привычек пользователя."""
+        return super().list(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Получить детали привычки",
+        operation_description="Возвращает детальную информацию о конкретной привычке",
+        tags=["Привычки"],
+    )
+    def retrieve(self, request, *args, **kwargs):
+        """Получить детали привычки."""
+        return super().retrieve(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Создать новую привычку",
+        operation_description="Создает новую привычку для текущего пользователя",
+        tags=["Привычки"],
+    )
+    def create(self, request, *args, **kwargs):
+        """Создать новую привычку."""
+        return super().create(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Обновить привычку",
+        operation_description="Полное обновление привычки (только владелец)",
+        tags=["Привычки"],
+    )
+    def update(self, request, *args, **kwargs):
+        """Обновить привычку."""
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Частично обновить привычку",
+        operation_description="Частичное обновление привычки (только владелец)",
+        tags=["Привычки"],
+    )
+    def partial_update(self, request, *args, **kwargs):
+        """Частично обновить привычку."""
+        return super().partial_update(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        operation_summary="Удалить привычку",
+        operation_description="Удаляет привычку (только владелец)",
+        tags=["Привычки"],
+    )
+    def destroy(self, request, *args, **kwargs):
+        """Удалить привычку."""
+        return super().destroy(request, *args, **kwargs)
 
     def get_queryset(self):
         """Возвращает только привычки текущего пользователя."""
@@ -50,6 +105,11 @@ class PublicHabitsAPIView(APIView):
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
 
+    @swagger_auto_schema(
+        operation_summary="Получить список публичных привычек",
+        operation_description="Возвращает список публичных привычек всех пользователей с пагинацией",
+        tags=["Привычки"],
+    )
     def get(self, request):
         """Возвращает список публичных привычек с пагинацией."""
         public_habits = Habit.objects.filter(is_public=True)
