@@ -41,7 +41,9 @@ jobs:
           SECRET_KEY: test-secret-key-for-ci-cd-12345
           DEBUG: '0'
           ALLOWED_HOSTS: localhost,127.0.0.1
-          DATABASE_URL: sqlite:///test.db
+          # Используем SQLite для тестов (быстрее, не требует PostgreSQL)
+          DB_ENGINE: django.db.backends.sqlite3
+          # DB_NAME не указываем, будет использован :memory: для тестов
         run: |
           poetry run python manage.py test
 
@@ -71,6 +73,13 @@ jobs:
       - name: Test Docker Compose syntax
         run: |
           docker compose config --quiet
+          
+      # Опционально: можно добавить проверку hadolint для Dockerfile
+      # - name: Lint Dockerfile
+      #   uses: hadolint/hadolint-action@v3.1.0
+      #   with:
+      #     dockerfile: Dockerfile
+      #     failure-threshold: warning
 
   deploy:
     runs-on: ubuntu-latest
