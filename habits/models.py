@@ -72,7 +72,7 @@ class Habit(models.Model):
         verbose_name="Публичная привычка",
         help_text="Признак публичности - можно сделать привычку публичной.",
     )
-    periodicity = models.PositiveIntegerField(
+    periodicity = models.IntegerField(
         default=1,
         verbose_name="Периодичность (в днях)",
         help_text="Интервал между выполнениями привычки в днях (не более 7 дней).",
