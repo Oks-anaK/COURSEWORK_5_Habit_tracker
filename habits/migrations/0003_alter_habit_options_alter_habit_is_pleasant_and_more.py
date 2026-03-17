@@ -2,8 +2,9 @@
 
 import django.core.validators
 import django.db.models.deletion
-import habits.validators
 from django.db import migrations, models
+
+import habits.validators
 
 
 class Migration(migrations.Migration):
@@ -68,7 +69,8 @@ class Migration(migrations.Migration):
             name="time_to_complete",
             field=models.PositiveIntegerField(
                 blank=True,
-                help_text="Укажите время в секундах, которое предположительно потратит пользовательна выполнение привычки (не более 120 секунд).",
+                help_text=("Укажите время в секундах, которое предположительно потратит пользовательна выполнение",
+                          "привычки (не более 120 секунд)."),
                 null=True,
                 validators=[
                     django.core.validators.MinValueValidator(1),
