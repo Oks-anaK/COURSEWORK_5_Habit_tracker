@@ -7,11 +7,14 @@ API для управления привычками пользователей.
 - **Python 3.12+**
 - **Django 6.0+**
 - **Django REST Framework**
-- **PostgreSQL**
+- **PostgreSQL 15**
 - **Redis**
 - **Celery** (асинхронные задачи)
 - **JWT** аутентификация
 - **Swagger/OpenAPI** документация
+- **Docker & Docker Compose** (контейнеризация)
+- **Nginx** (веб-сервер)
+- **Gunicorn** (WSGI-сервер)
 
 ## Функциональность
 
@@ -54,8 +57,12 @@ cp .env.example .env
 
 4. Заполните переменные окружения в `.env`:
 - `SECRET_KEY` - секретный ключ Django
-- `NAME`, `USER`, `PASSWORD`, `HOST`, `PORT` - настройки PostgreSQL
-- `LOCATION` - URL Redis (например: `redis://localhost:6379/0`)
+- `DEBUG` - режим отладки (True/False)
+- `ALLOWED_HOSTS` - разрешённые хосты (через запятую)
+- `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` - настройки PostgreSQL
+- `CELERY_BROKER_URL` - URL Redis для Celery (например: `redis://localhost:6379/0`)
+- `CELERY_RESULT_BACKEND` - URL Redis для результатов Celery
+- `TELEGRAM_BOT_TOKEN` - токен Telegram-бота для напоминаний
 
 5. Примените миграции:
 ```bash
@@ -89,12 +96,144 @@ poetry run celery -A config worker -l info
 poetry run celery -A config beat -l info
 ```
 
+## Запуск с Docker
+
+### Требования
+
+- Docker и Docker Compose
+
+### Быстрый старт (одна команда)
+
+**Для Linux/Mac:**
+```bash
+chmod +x scripts/start.sh
+./scripts/start.sh
+```
+
+**Для Windows:**
+```cmd
+scripts\start.bat
+```
+
+**Или вручную:**
+1. **Создайте файл `.env`** (см. раздел "Установка")
+
+2. **Запустите все сервисы:**
+```bash
+docker compose up -d --build
+```
+
+3. **Выполните миграции:**
+```bash
+docker compose exec web python manage.py migrate
+```
+
+4. **Соберите статические файлы:**
+```bash
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+5. **Создайте суперпользователя (опционально):**
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+6. **Приложение доступно:**
+- API: http://localhost:8080/
+- Админ-панель: http://localhost:8080/admin/
+- Документация: http://localhost:8080/swagger/
+
+### Управление контейнерами
+
+```bash
+# Просмотр статуса
+docker compose ps
+
+# Просмотр логов
+docker compose logs -f web
+docker compose logs -f celery
+
+# Остановка
+docker compose down
+
+# Пересборка образов
+docker compose up -d --build
+```
+
+## Деплой на сервер
+
+### Подготовка сервера
+
+1. **Подключитесь к серверу:**
+```bash
+ssh deploy@SERVER_IP
+# Для данного проекта: ssh deploy@158.160.230.124
+```
+
+2. **Клонируйте репозиторий:**
+```bash
+cd ~/apps
+git clone <repository-url> COURSEWORK_5_Habit_tracker
+cd COURSEWORK_5_Habit_tracker
+```
+
+3. **Создайте `.env` файл для продакшена:**
+```env
+SECRET_KEY=your-production-secret-key
+DEBUG=False
+ALLOWED_HOSTS=your-server-ip,domain.com
+
+DB_NAME=habits_db
+DB_USER=postgres
+DB_PASSWORD=your-secure-password
+DB_HOST=db
+DB_PORT=5432
+
+# Redis и Celery настройки (для Docker LOCATION=redis://redis:6379/0)
+LOCATION=my_location
+
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+```
+
+4. **Запустите приложение:**
+```bash
+docker compose up -d --build
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py collectstatic --noinput
+```
+
+5. **Приложение будет доступно на порту 8080**
+
+### Обновление на сервере
+
+```bash
+cd ~/apps/COURSEWORK_5_Habit_tracker
+git pull
+docker compose up -d --build
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py collectstatic --noinput
+docker compose restart web celery celery-beat
+```
+
+## 🌐 Развернутое приложение
+
+**Адрес сервера:** http://158.160.230.124:8080/
+
+- **API**: http://158.160.230.124:8080/
+- **Админ-панель**: http://158.160.230.124:8080/admin/
+- **Документация API (Swagger)**: http://158.160.230.124:8080/swagger/
+
 ## API Документация
 
 После запуска сервера документация доступна по адресам:
 
+**Локальная разработка:**
 - **Swagger UI**: http://127.0.0.1:8000/swagger/
 - **ReDoc**: http://127.0.0.1:8000/redoc/
+
+**Docker/Продакшен:**
+- **Swagger UI**: http://localhost:8080/swagger/ (или ваш домен)
+- **ReDoc**: http://localhost:8080/redoc/
 
 ## Использование API
 
@@ -174,15 +313,68 @@ poetry run black .
 poetry run isort .
 ```
 
+## CI/CD
+
+Проект использует GitHub Actions для автоматизации тестирования, линтинга и деплоя.
+
+### Этапы CI/CD Pipeline
+
+1. **Тестирование** (`test` job):
+   - Установка зависимостей через Poetry
+   - Запуск линтера (flake8, black)
+   - Запуск тестов Django
+
+2. **Проверка Docker** (`docker-build` job):
+   - Валидация docker-compose.yml
+   - Сборка Docker-образа
+   - Проверка синтаксиса Docker Compose
+
+3. **Деплой** (`deploy` job):
+   - Автоматический деплой на сервер при пуше в `main`, `master` или `develop`
+   - Обновление кода через `git pull`
+   - Пересборка и перезапуск контейнеров
+   - Применение миграций
+   - Сбор статических файлов
+
+### Настройка CI/CD
+
+Для работы автоматического деплоя необходимо настроить GitHub Secrets:
+
+1. **Открой репозиторий на GitHub** → Settings → Secrets and variables → Actions
+
+2. **Добавь следующие секреты:**
+   - `SSH_HOST` - IP адрес сервера (например: `158.160.230.124`)
+   - `SSH_USER` - пользователь для SSH (например: `deploy`)
+   - `SSH_PRIVATE_KEY` - приватный SSH ключ (весь текст, включая BEGIN/END строки)
+   - `SSH_PORT` - порт SSH (опционально, по умолчанию 22)
+
+3. **Как получить SSH ключ:**
+   - Если ключ уже есть: найди файл `~/.ssh/id_rsa` или `~/.ssh/id_ed25519` и скопируй содержимое
+   - Если ключа нет: создай новый через `ssh-keygen`, затем добавь публичный ключ на сервер в `~/.ssh/authorized_keys`
+
+4. **Автоматический деплой работает:**
+   - При пуше в ветки: `main`, `master`, `develop`
+   - Автоматически обновляет код на сервере
+   - Пересобирает и перезапускает контейнеры
+   - Применяет миграции и собирает статику
+
+Workflow файл: `.github/workflows/ci-cd.yml`
+
 ## Структура проекта
 
 ```
 PythonProject14/
-├── config/          # Настройки Django
-├── habits/          # Приложение привычек
-├── users/           # Приложение пользователей
+├── config/              # Настройки Django
+├── habits/              # Приложение привычек
+├── users/               # Приложение пользователей
+├── nginx/               # Конфигурация Nginx
+│   ├── Dockerfile
+│   └── nginx.conf
 ├── manage.py
-├── pyproject.toml   # Зависимости Poetry
+├── pyproject.toml        # Зависимости Poetry
+├── Dockerfile           # Образ приложения
+├── docker-compose.yml   # Docker Compose конфигурация
+├── .env                 # Переменные окружения (не в git)
 └── README.md
 ```
 

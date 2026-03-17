@@ -1,0 +1,54 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Статистика | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block content %}
+<h1>📊 Статистика системы</h1>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+    <div class="module" style="padding: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #6366f1;">👥 Пользователи</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0; color: #111827;">
+            {{ stats.total_users|default:0 }}
+        </p>
+        <p style="color: #6b7280; margin: 0.5rem 0 0 0;">
+            Всего пользователей
+        </p>
+    </div>
+    
+    <div class="module" style="padding: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #10b981;">✅ Активные</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0; color: #111827;">
+            {{ stats.active_users|default:0 }}
+        </p>
+        <p style="color: #6b7280; margin: 0.5rem 0 0 0;">
+            Активных пользователей
+        </p>
+    </div>
+    
+    <div class="module" style="padding: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #8b5cf6;">👔 Персонал</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0; color: #111827;">
+            {{ stats.staff_users|default:0 }}
+        </p>
+        <p style="color: #6b7280; margin: 0.5rem 0 0 0;">
+            Пользователей персонала
+        </p>
+    </div>
+    
+    <div class="module" style="padding: 1.5rem;">
+        <h3 style="margin: 0 0 1rem 0; color: #f59e0b;">🆕 Новые</h3>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0; color: #111827;">
+            {{ stats.new_users_today|default:0 }}
+        </p>
+        <p style="color: #6b7280; margin: 0.5rem 0 0 0;">
+            Новых за сегодня
+        </p>
+    </div>
+</div>
+
+<div style="margin-top: 2rem;">
+    <a href="{% url 'admin:index' %}" class="button">← Вернуться на главную</a>
+</div>
+{% endblock %}

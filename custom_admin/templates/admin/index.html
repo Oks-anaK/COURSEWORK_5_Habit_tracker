@@ -1,0 +1,123 @@
+{% extends "admin/index.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <style>
+        .dashboard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dashboard p {
+            margin: 0.5rem 0 0 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #6b7280;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin: 0;
+        }
+        
+        .module {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .module:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .module h2 {
+            display: flex;
+            align-items: center;
+        }
+        
+        .module h2::before {
+            content: "📊 ";
+            margin-right: 0.5rem;
+        }
+        
+        .quick-actions {
+            margin-bottom: 2rem;
+        }
+        
+        .quick-actions a {
+            display: inline-block;
+            margin-right: 1rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>🎯 {{ site_header|default:_('Django administration') }}</h1>
+    <p>Добро пожаловать в панель управления</p>
+</div>
+
+{% if stats %}
+<div class="quick-stats">
+    <div class="stat-card">
+        <h3>👥 Всего пользователей</h3>
+        <p class="number">{{ stats.total_users|default:0 }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>✅ Активных</h3>
+        <p class="number">{{ stats.active_users|default:0 }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>👔 Персонала</h3>
+        <p class="number">{{ stats.staff_users|default:0 }}</p>
+    </div>
+    <div class="stat-card">
+        <h3>🆕 Новых сегодня</h3>
+        <p class="number">{{ stats.new_users_today|default:0 }}</p>
+    </div>
+</div>
+
+<div class="quick-actions">
+    <a href="{% url 'admin:admin_stats' %}" class="button">📊 Подробная статистика</a>
+</div>
+{% endif %}
+
+{{ block.super }}
+{% endblock %}
