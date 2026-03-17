@@ -102,8 +102,20 @@ poetry run celery -A config beat -l info
 
 - Docker и Docker Compose
 
-### Быстрый старт
+### Быстрый старт (одна команда)
 
+**Для Linux/Mac:**
+```bash
+chmod +x scripts/start.sh
+./scripts/start.sh
+```
+
+**Для Windows:**
+```cmd
+scripts\start.bat
+```
+
+**Или вручную:**
 1. **Создайте файл `.env`** (см. раздел "Установка")
 
 2. **Запустите все сервисы:**
@@ -121,7 +133,7 @@ docker compose exec web python manage.py migrate
 docker compose exec web python manage.py collectstatic --noinput
 ```
 
-5. **Создайте суперпользователя:**
+5. **Создайте суперпользователя (опционально):**
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
@@ -326,11 +338,25 @@ poetry run isort .
 
 ### Настройка CI/CD
 
-Для работы деплоя необходимо настроить GitHub Secrets:
-- `SSH_HOST` - IP адрес сервера
-- `SSH_USER` - пользователь для SSH (обычно `deploy`)
-- `SSH_PRIVATE_KEY` - приватный SSH ключ
-- `SSH_PORT` - порт SSH (опционально, по умолчанию 22)
+Для работы автоматического деплоя необходимо настроить GitHub Secrets:
+
+1. **Открой репозиторий на GitHub** → Settings → Secrets and variables → Actions
+
+2. **Добавь следующие секреты:**
+   - `SSH_HOST` - IP адрес сервера (например: `158.160.230.124`)
+   - `SSH_USER` - пользователь для SSH (например: `deploy`)
+   - `SSH_PRIVATE_KEY` - приватный SSH ключ (весь текст, включая BEGIN/END строки)
+   - `SSH_PORT` - порт SSH (опционально, по умолчанию 22)
+
+3. **Как получить SSH ключ:**
+   - Если ключ уже есть: найди файл `~/.ssh/id_rsa` или `~/.ssh/id_ed25519` и скопируй содержимое
+   - Если ключа нет: создай новый через `ssh-keygen`, затем добавь публичный ключ на сервер в `~/.ssh/authorized_keys`
+
+4. **Автоматический деплой работает:**
+   - При пуше в ветки: `main`, `master`, `develop`
+   - Автоматически обновляет код на сервере
+   - Пересобирает и перезапускает контейнеры
+   - Применяет миграции и собирает статику
 
 Workflow файл: `.github/workflows/ci-cd.yml`
 
