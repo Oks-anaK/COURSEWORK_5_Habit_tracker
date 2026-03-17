@@ -116,7 +116,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
           script: |
-            cd ~/apps/REPO_NAME
+            cd ~/apps/COURSEWORK_5_Habit_tracker
             git pull
             docker compose down
             docker compose pull
