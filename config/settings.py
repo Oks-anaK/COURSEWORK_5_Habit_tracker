@@ -4,7 +4,8 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
-load_dotenv()
+# override=False - не перезаписывать переменные окружения, которые уже установлены (например, из Docker)
+load_dotenv(override=False)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,20 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', 'localhost').split(',') if host.strip()]
 
+# CSRF настройки для работы через IP адрес
+# Используем os.environ.get() чтобы гарантированно получить переменную из окружения Docker
+csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000')
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() 
+    for origin in csrf_origins.split(',') 
+    if origin.strip()
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    "custom_admin",  # Должно быть ПЕРЕД django.contrib.admin для переопределения шаблонов
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -3,6 +3,7 @@ from django.urls import include, path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from custom_admin.admin import custom_admin_site
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,7 +38,7 @@ API для управления привычками пользователей.
 )
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", custom_admin_site.urls),
     path("habits/", include("habits.urls", namespace="habits")),
     path("users/", include("users.urls", namespace="users")),
     path(
