@@ -1,0 +1,405 @@
+/* Кастомные стили для админки Django */
+
+/* Основные цвета */
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --secondary-color: #8b5cf6;
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --info-color: #3b82f6;
+    --dark-bg: #1f2937;
+    --light-bg: #f9fafb;
+    --border-color: #e5e7eb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+}
+
+/* Общие стили */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* Хедер админки */
+#header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border-bottom: none;
+    padding: 1rem 0;
+}
+
+#header h1 {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+#header h1 a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+#header h1 a:hover {
+    color: #f3f4f6;
+}
+
+#user-tools {
+    color: #ffffff;
+}
+
+#user-tools a {
+    color: #ffffff;
+    font-weight: 500;
+}
+
+#user-tools a:hover {
+    color: #f3f4f6;
+    text-decoration: underline;
+}
+
+/* Боковое меню */
+#nav-sidebar {
+    background: #ffffff;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid var(--border-color);
+}
+
+.module {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.module h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    padding: 0.75rem 1rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    border-bottom: none;
+}
+
+.module table {
+    width: 100%;
+}
+
+.module th {
+    background: var(--light-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.module td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.module td a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.module td a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+/* Контентная область */
+#content {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin: 1.5rem 0;
+}
+
+#content h1 {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+/* Кнопки */
+.button,
+input[type=submit],
+input[type=button],
+.submit-row input {
+    background: var(--primary-color);
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover,
+input[type=submit]:hover,
+input[type=button]:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.button.default,
+input[type=submit].default {
+    background: var(--success-color);
+}
+
+.button.default:hover,
+input[type=submit].default:hover {
+    background: #059669;
+}
+
+/* Формы */
+.form-row {
+    margin-bottom: 1.5rem;
+}
+
+.form-row label {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-row input[type=text],
+.form-row input[type=email],
+.form-row input[type=password],
+.form-row input[type=number],
+.form-row textarea,
+.form-row select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-row input[type=text]:focus,
+.form-row input[type=email]:focus,
+.form-row input[type=password]:focus,
+.form-row input[type=number]:focus,
+.form-row textarea:focus,
+.form-row select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Таблицы */
+#result_list {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#result_list thead th {
+    background: var(--light-bg);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border-color);
+}
+
+#result_list tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+#result_list tbody tr:hover {
+    background: var(--light-bg);
+}
+
+#result_list tbody td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Сообщения */
+.messagelist {
+    margin-bottom: 1.5rem;
+}
+
+.messagelist li {
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.messagelist li.success {
+    background: #d1fae5;
+    color: #065f46;
+    border-left: 4px solid var(--success-color);
+}
+
+.messagelist li.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid var(--danger-color);
+}
+
+.messagelist li.warning {
+    background: #fef3c7;
+    color: #92400e;
+    border-left: 4px solid var(--warning-color);
+}
+
+.messagelist li.info {
+    background: #dbeafe;
+    color: #1e40af;
+    border-left: 4px solid var(--info-color);
+}
+
+/* Пагинация */
+.paginator {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.paginator a,
+.paginator span {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-primary);
+    background: var(--light-bg);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.paginator a:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.paginator .this-page {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Фильтры */
+#changelist-filter {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#changelist-filter h2 {
+    background: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+#changelist-filter h3 {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+#changelist-filter li {
+    margin-bottom: 0.5rem;
+}
+
+#changelist-filter a {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: 0.5rem;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+#changelist-filter a:hover,
+#changelist-filter a.selected {
+    background: var(--light-bg);
+    color: var(--primary-color);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    #content {
+        padding: 1rem;
+    }
+    
+    #header h1 {
+        font-size: 1.25rem;
+    }
+    
+    .module {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.module,
+#content {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Кастомные иконки и декорации */
+.module h2::before {
+    content: "▸ ";
+    margin-right: 0.5rem;
+}
+
+/* Улучшенные чекбоксы */
+input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+/* Улучшенные селекты */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366f1' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2.5rem;
+    appearance: none;
+}
