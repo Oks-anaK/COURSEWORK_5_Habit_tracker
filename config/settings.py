@@ -22,9 +22,11 @@ DEBUG = os.getenv("DEBUG", "0") == "1"
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', 'localhost').split(',') if host.strip()]
 
 # CSRF настройки для работы через IP адрес
+# Используем os.environ.get() чтобы гарантированно получить переменную из окружения Docker
+csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000')
 CSRF_TRUSTED_ORIGINS = [
     origin.strip() 
-    for origin in os.getenv('CSRF_TRUSTED_ORIGINS', 'http://localhost:8000,http://127.0.0.1:8000').split(',') 
+    for origin in csrf_origins.split(',') 
     if origin.strip()
 ]
 
