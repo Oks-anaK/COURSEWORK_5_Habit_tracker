@@ -4,7 +4,8 @@ from pathlib import Path
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
-load_dotenv()
+# override=False - не перезаписывать переменные окружения, которые уже установлены (например, из Docker)
+load_dotenv(override=False)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
